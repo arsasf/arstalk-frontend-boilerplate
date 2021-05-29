@@ -1,5 +1,19 @@
 @import url("https://fonts.googleapis.com/css2?family=Rubik&display=swap");
 
+.spinner {
+  background-color: #7e98df;
+  height: 660px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading {
+  color: white;
+  font-weight: 600;
+}
+
 .card {
   font-family: "Rubik", sans-serif;
   height: auto;
@@ -173,4 +187,36 @@
   font-size: 14px;
   font-weight: 500;
   color: #7e98df;
+}
+
+.modal {
+  background-color: #7e98df63;
+}
+
+.modalTitle {
+  color: #7e98df;
+  font-weight: 600;
+}
+
+.modalFooter {
+  background-color: #232323;
+  color: #7e98df;
+  width: 100px;
+}
+
+.modalFooter:hover {
+  background-color: #7e98df;
+  color: white;
+}
+
+.modalHeader {
+  padding: 9px 15px;
+  border-bottom: 1px solid #eee;
+  background-color: #232323;
+  -webkit-border-top-left-radius: 5px;
+  -webkit-border-top-right-radius: 5px;
+  -moz-border-radius-topleft: 5px;
+  -moz-border-radius-topright: 5px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 }

@@ -1,0 +1,96 @@
+@import url("https://fonts.googleapis.com/css2?family=Rubik&display=swap");
+
+.fullArea {
+  background: radial-gradient(#e2e0e0 3px, transparent 4px),
+    radial-gradient(#e2e0e0 3px, transparent 4px),
+    linear-gradient(#7e98df 4px, transparent 0),
+    linear-gradient(
+      45deg,
+      transparent 74px,
+      transparent 75px,
+      #e2e0e0 75px,
+      #e2e0e0 76px,
+      transparent 77px,
+      transparent 109px
+    ),
+    linear-gradient(
+      -45deg,
+      transparent 75px,
+      transparent 76px,
+      #e2e0e0 76px,
+      #e2e0e0 77px,
+      transparent 78px,
+      transparent 109px
+    ),
+    #fafafa;
+  background-size: 109px 109px, 109px 109px, 100% 6px, 109px 109px, 109px 109px;
+  background-position: 54px 55px, 0px 0px, 0px 0px, 0px 0px, 0px 0px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  height: 660px;
+}
+
+.container {
+  font-family: "Rubik", sans-serif;
+  background-color: #232323;
+  height: 300px;
+  border-radius: 30px;
+  border: 8px solid #7e98df;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.arstalk {
+  margin-top: 20px;
+  color: #7e98df;
+}
+
+.modal {
+  background-color: #7e98df63;
+}
+
+.modalTitle {
+  color: #7e98df;
+  font-weight: 600;
+}
+
+.modalFooter {
+  background-color: #232323;
+  color: #7e98df;
+  width: 100px;
+}
+
+.modalFooter:hover {
+  background-color: #7e98df;
+  color: white;
+}
+
+.modalHeader {
+  padding: 9px 15px;
+  border-bottom: 1px solid #eee;
+  background-color: #232323;
+  -webkit-border-top-left-radius: 5px;
+  -webkit-border-top-right-radius: 5px;
+  -moz-border-radius-topleft: 5px;
+  -moz-border-radius-topright: 5px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.colContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.button {
+  background-color: #7e98df;
+  color: white;
+  font-weight: 500;
+  width: 70%;
+}

@@ -68,6 +68,7 @@
 
 .textSelect {
   font-size: 18px;
+  width: 100%;
   font-weight: 400;
   color: #848484;
   height: 100%;
@@ -1188,4 +1189,36 @@
   align-items: center;
   color: #7e98df;
   font-weight: 600;
+}
+
+.modal {
+  background-color: #7e98df63;
+}
+
+.modalTitle {
+  color: #7e98df;
+  font-weight: 600;
+}
+
+.modalFooter {
+  background-color: #232323;
+  color: #7e98df;
+  width: 100px;
+}
+
+.modalFooter:hover {
+  background-color: #7e98df;
+  color: white;
+}
+
+.modalHeader {
+  padding: 9px 15px;
+  border-bottom: 1px solid #eee;
+  background-color: #232323;
+  -webkit-border-top-left-radius: 5px;
+  -webkit-border-top-right-radius: 5px;
+  -moz-border-radius-topleft: 5px;
+  -moz-border-radius-topright: 5px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 }

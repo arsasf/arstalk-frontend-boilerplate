@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Switch } from "react-router-dom";
 
 import { Provider } from "react-redux";
-import store from "./redux/store";
+import { PersistGate } from "redux-persist/integration/react";
+import { store, persistor } from "./redux/store";
 
 import PrivateRoute from "./helpers/PrivateRoute";
 import PublicRoute from "./helpers/PublicRoute";
@@ -15,6 +16,7 @@ import Counter from "./pages/main/Counter/CounterFunctional";
 
 import io from "socket.io-client";
 import ArsTalk from "./pages/main/ArsTalk/ArsTalk";
+import Verify from "./pages/auth/Verify/Verify";
 
 function App() {
   // =======================================
@@ -36,36 +38,45 @@ function App() {
   // console.log(socket);
   return (
     <Provider store={store}>
-      <Router>
-        <Switch>
-          <PublicRoute
-            restricted={true}
-            path="/login"
-            exact
-            component={Login}
-          />
-          <PublicRoute
-            restricted={true}
-            path="/register"
-            exact
-            component={Register}
-          />
-          <PublicRoute
-            restricted={true}
-            path="/forgot-password"
-            exact
-            component={ForgotPassword}
-          />
-          <PrivateRoute socket={socket} path="/chat" exact component={Chat} />
-          <PrivateRoute
-            // socket={socket}
-            path="/arstalk"
-            exact
-            component={ArsTalk}
-          />
-          <PrivateRoute path="/counter" exact component={Counter} />
-        </Switch>
-      </Router>
+      <PersistGate loading={null} persistor={persistor}>
+        <Router>
+          <Switch>
+            <PublicRoute restricted={true} path="/" exact component={Login} />
+            <PublicRoute
+              restricted={true}
+              path="/login"
+              exact
+              component={Login}
+            />
+            <PublicRoute
+              restricted={true}
+              path="/register"
+              exact
+              component={Register}
+            />
+            <PublicRoute
+              restricted={true}
+              path="/forgot-password"
+              exact
+              component={ForgotPassword}
+            />
+            <PrivateRoute socket={socket} path="/chat" exact component={Chat} />
+            <PrivateRoute
+              // socket={socket}
+              path="/arstalk"
+              exact
+              component={ArsTalk}
+            />
+            <PublicRoute
+              // socket={socket}
+              path="/verify-register/:id"
+              exact
+              component={Verify}
+            />
+            <PrivateRoute path="/counter" exact component={Counter} />
+          </Switch>
+        </Router>
+      </PersistGate>
     </Provider>
   );
 }

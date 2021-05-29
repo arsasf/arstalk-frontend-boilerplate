@@ -11,6 +11,7 @@ import {
   Button,
   InputGroup,
   ButtonGroup,
+  Modal,
 } from "react-bootstrap";
 import Setting from "../../../assets/img/setting.png";
 import Contact from "../../../assets/img/contact.png";
@@ -41,6 +42,10 @@ function ArsTalk(props) {
   const [accountContact, setAccountContact] = useState(false);
   const [tabLocation, setTabLocation] = useState(false);
   const [tabImage, setTabImage] = useState(false);
+  const [msg, setMsg] = useState("");
+  const [show, setShow] = useState(false);
+  const [info, setInfo] = useState("");
+  const handleClose = () => setShow(false);
   const [form, setForm] = useState({
     fullName: "Gloria Mckinney",
     username: "@wdlam",
@@ -81,9 +86,34 @@ function ArsTalk(props) {
     setTabImage(param2);
   };
 
+  const handleLogout = () => {
+    setShow(true);
+    setMsg("Success Logout !");
+    setInfo("LOGOUT");
+    setTimeout(() => {
+      localStorage.clear();
+      props.history.push("/");
+    }, 3000);
+  };
+
   // console.log( props);
   return (
     <Container fluid className={styles.container}>
+      <Modal show={show} className={styles.modal}>
+        <Modal.Header className={styles.modalHeader}>
+          <Modal.Title className={styles.modalTitle}>INFO {info}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className={styles.modalBody}>{msg}</Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="fff"
+            className={styles.modalFooter}
+            onClick={handleClose}
+          >
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <Row>
         {setting === false ? (
           <Col lg={4} className={`${styles.left}`}>
@@ -249,7 +279,7 @@ function ArsTalk(props) {
                 <Image src={Key} className={styles.iconChange} />
                 <p className={styles.titleUserSetting}>Change Password</p>
               </Col>
-              <Col className={styles.colChangeLogout}>
+              <Col className={styles.colChangeLogout} onClick={handleLogout}>
                 <Image src={Logout} className={styles.iconChange} />
                 <p className={styles.titleUserSetting}>Logout</p>
               </Col>
