@@ -1,110 +1,123 @@
 const initialState = {
-  data: {},
+  contact: [],
   isLoading: false,
   isError: false,
   msg: "",
+  search: "",
 };
 
-const auth = (state = initialState, action) => {
+const contact = (state = initialState, action) => {
   switch (action.type) {
-    case "REGISTER_PENDING":
+    case "FOUND_USER_EMAIL_PENDING":
       return {
         ...state,
         isLoading: true,
         isError: false,
-        msg: "",
       };
-    case "REGISTER_FULFILLED":
+    case "FOUND_USER_EMAIL_FULFILLED":
       return {
         ...state,
         isLoading: false,
         isError: false,
-        data: action.payload.data.data,
+        contact: action.payload.data.data,
         msg: action.payload.data.msg,
       };
-    case "REGISTER_REJECTED":
+    case "FOUND_USER_EMAIL_REJECTED":
       return {
         ...state,
         isLoading: false,
         isError: true,
-        data: {},
+        contact: [],
         msg: action.payload.response.data.msg,
       };
-    case "VERIFY_PENDING":
+    case "GET_CONTACT_ID_PENDING":
       return {
         ...state,
         isLoading: true,
         isError: false,
-        msg: "",
       };
-    case "VERIFY_FULFILLED":
+    case "GET_CONTACT_ID_FULFILLED":
       return {
         ...state,
         isLoading: false,
         isError: false,
-        data: action.payload.data.data,
+        contact: action.payload.data.data,
         msg: action.payload.data.msg,
       };
-    case "VERIFY_REJECTED":
+    case "GET_CONTACT_ID_REJECTED":
       return {
         ...state,
         isLoading: false,
         isError: true,
-        data: {},
+        contact: [],
         msg: action.payload.response.data.msg,
       };
-    case "LOGIN_PENDING":
+    case "GET_CONTACT_PENDING":
       return {
         ...state,
         isLoading: true,
         isError: false,
-        msg: "",
       };
-    case "LOGIN_FULFILLED":
+    case "GET_CONTACT_FULFILLED":
       return {
         ...state,
         isLoading: false,
         isError: false,
-        data: action.payload.data.data,
+        // search:
+        contact: action.payload.data.data,
         msg: action.payload.data.msg,
       };
-    case "LOGIN_REJECTED":
+    case "GET_CONTACT_REJECTED":
       return {
         ...state,
         isLoading: false,
         isError: true,
-        data: {},
+        contact: [],
         msg: action.payload.response.data.msg,
       };
-
-    case "LOGOUT_PENDING":
+    case "ADD_CONTACT_PENDING":
       return {
         ...state,
         isLoading: true,
         isError: false,
-        msg: "",
       };
-    case "LOGOUT_FULFILLED":
-      localStorage.clear();
+    case "ADD_CONTACT_FULFILLED":
       return {
         ...state,
         isLoading: false,
         isError: false,
-        data: {},
         msg: action.payload.data.msg,
       };
-    case "LOGOUT_REJECTED":
+    case "ADD_CONTACT_REJECTED":
       return {
         ...state,
         isLoading: false,
         isError: true,
-        data: {},
         msg: action.payload.response.data.msg,
       };
-
+    case "DELETE_CONTACT_PENDING":
+      return {
+        ...state,
+        isLoading: true,
+        isError: false,
+      };
+    case "DELETE_CONTACT_FULFILLED":
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        msg: action.payload.data.msg,
+      };
+    case "DELETE_CONTACT_REJECTED":
+      return {
+        ...state,
+        isLoading: false,
+        isError: true,
+        msg: action.payload.response.data.msg,
+      };
     default:
       return state;
   }
 };
 
-export default auth;
+export default contact;

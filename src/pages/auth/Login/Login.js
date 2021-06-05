@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import { connect } from "react-redux";
 import { login } from "../../../redux/action/auth";
+import { getUserById } from "../../../redux/action/user";
 import {
   Button,
   Container,
@@ -31,22 +32,27 @@ function Login(props) {
     console.log("Login Run");
     setTimeout(() => {
       setIsLogin(false);
+      props.history.push("/");
     }, 2000);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleClose = () => setShow(false);
 
   const handleLogin = (event) => {
+    console.log(true);
     event.preventDefault();
     console.log(form);
     props
       .login(form)
       .then((result) => {
+        console.log(result);
         localStorage.setItem("token", result.value.data.data.token);
+        props.getUserById(result.value.data.data.user_id);
         setShow(true);
         setMsg(result.value.data.msg);
         setTimeout(() => {
-          props.history.push("/arstalk");
+          props.history.push(`/arstalk`);
         }, 3000);
       })
       .catch((err) => {
@@ -166,5 +172,5 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-const mapDispatchToProps = { login };
+const mapDispatchToProps = { login, getUserById };
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

@@ -202,8 +202,8 @@
   justify-content: space-between;
   background-color: white;
   align-items: center;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding: 20px;
+  border-radius: 20px;
 }
 
 .iconSearch {
@@ -217,10 +217,11 @@
 }
 
 .buttonSearch {
-  height: 50px;
+  height: min-content;
   border-bottom-left-radius: 15px;
   border-top-left-radius: 15px;
-  margin-right: 10px;
+  margin-right: 0px;
+  background-color: transparent;
 }
 
 .buttonPlus {
@@ -229,12 +230,23 @@
   border-radius: 15px;
 }
 
+.buttonContact:hover,
+.buttonContact:active,
+.buttonContact:focus {
+  background-color: #232323;
+  box-shadow: #232323;
+}
+
+.buttonContact {
+  width: 60px;
+  height: 50px;
+  border-radius: 15px;
+  background-color: #7e98df;
+}
+
 .buttonSearch:focus,
 .buttonSearch:active,
-.buttonSearch:hover,
-.buttonPlus:focus,
-.buttonPlus:active,
-.buttonPlus:hover {
+.buttonSearch:hover {
   height: 50px;
   outline: none !important;
   box-shadow: none !important;
@@ -243,9 +255,9 @@
 
 .formGroup {
   background-color: #fafafa;
-  height: 50px;
+  height: 52px;
   width: 300px;
-  border-radius: 15px;
+  border-radius: 20px;
 }
 
 .placeholder::placeholder {
@@ -271,7 +283,7 @@
 .placeholder option:active {
   outline: none !important;
   box-shadow: none !important;
-  border-bottom: 3px solid #7e98df;
+  border-bottom: 0;
   background-color: transparent;
 }
 
@@ -286,15 +298,16 @@
   height: 100px;
   padding: 20px;
   margin-top: 10px;
+  color: #848484;
 }
 
 .rowHeaderInfoCard2:hover,
 .rowHeaderInfoCard2:focus,
 .rowHeaderInfoCard2:active {
-  background-color: #232323;
+  background-color: #e2e0e0;
   outline: none !important;
   box-shadow: none !important;
-  color: white;
+  color: #848484;
 }
 
 .iconFriend {
@@ -317,12 +330,12 @@
 .nameReceiver {
   font-size: 18px;
   font-weight: 500;
+  color: #232323;
 }
 
 .time {
   font-size: 14px;
   font-weight: 400;
-  color: #848484;
 }
 
 .messageReceiver {
@@ -363,10 +376,10 @@
 .username {
   margin-left: auto;
   margin-right: auto;
-  font-size: 24px;
-  font-weight: 500;
   text-align: left;
   color: #7e98df;
+  font-size: 22px;
+  font-weight: 600;
 }
 
 .rowHeaderInfoCard4 {
@@ -378,7 +391,21 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* background-color: brown; */
+  padding: 20px;
+  position: relative;
+}
+
+.rowHeaderInfoCard16 {
+  margin-top: 80px;
+  width: 100%;
+  margin-right: 20px;
+  margin-left: 0;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #232323;
   padding: 20px;
   position: relative;
 }
@@ -393,9 +420,11 @@
 
 .usernameProfile {
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 500;
   color: #848484;
-  margin-top: 0px;
+  margin-top: 10px;
+  width: 100%;
+  text-align: center;
 }
 
 .rowHeaderInfoCard5 {
@@ -405,8 +434,7 @@
   flex-direction: column;
   justify-content: left;
   align-items: flex-start;
-  /* background-color: brown; */
-  padding: 20px;
+  padding: 20px 20px 0px 20px;
 }
 
 .account,
@@ -451,7 +479,7 @@
 .profileUser {
   width: 82px;
   height: 82px;
-  border-radius: 30px;
+  border-radius: 20px;
   display: flex;
   position: absolute;
   margin: auto;
@@ -472,15 +500,18 @@
   margin-left: auto;
   margin-right: auto;
   margin-top: 0;
+  padding: 0;
 }
 
 .placeholderFullname {
+  width: max-content;
   font-size: 22px;
   font-weight: 600;
-  text-align: left;
+  text-align: center;
   margin-top: 20px;
   text-align: center;
   color: #232323;
+  border-radius: 20px;
 }
 
 .placeholderPhone {
@@ -495,16 +526,42 @@
   font-weight: 400;
   text-align: left;
   color: #7e98df;
-  padding: 10px;
+  margin-bottom: 0;
+}
+.boxButtonUpdate {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 20px;
+}
+.buttonUpdate {
+  display: flex;
+  align-items: center;
+  background-color: #7e98df;
+  color: white;
+  font-weight: 500;
+  width: 130px;
+  height: 40px;
+  border: #7e98df;
+  margin-left: 20px;
 }
 
-.changePhone:hover {
-  cursor: pointer;
-  background-color: #232323;
-  border-radius: 10px;
+.buttonUpdate:hover {
+  color: white;
+  font-weight: 500;
+  box-shadow: teal;
 }
 
-.placeholderUsername {
+.buttonCancel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 500;
+  width: 130px;
+  height: 40px;
+}
+
+.but .placeholderUsername {
   font-size: 16px;
   font-weight: 600;
   text-align: left;
@@ -559,7 +616,8 @@
   margin-bottom: 0;
 }
 
-.colChangeLogout:hover {
+.colChangeLogout:hover,
+.colChangeLogout1:hover {
   background-color: #232323;
   width: 100%;
   color: white;
@@ -576,6 +634,17 @@
   color: #232323;
   height: 90px;
   padding: 10px;
+}
+
+.colChangeLogout1 {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: #232323;
+  height: 90px;
+  padding: 10px;
+  margin-bottom: 30px;
 }
 
 .iconChange {
@@ -613,9 +682,12 @@
   margin-top: 10px;
 }
 
-.rowHeaderInfoCard6:hover {
-  background-color: #232323;
-  color: white;
+.rowHeaderInfoCard6:hover,
+.rowHeaderInfoCard6:active,
+.rowHeaderInfoCard6:focus {
+  background-color: #e2e0e0;
+  color: #232323;
+  box-shadow: none;
 }
 .colRoom1 {
   display: flex;
@@ -660,7 +732,7 @@
 .bgImgAddFriend:hover {
   height: 50px;
   outline: none !important;
-  box-shadow: none !important;
+  box-shadow: teal;
   background-color: #7e98df;
 }
 
@@ -736,7 +808,7 @@
   height: 80px;
   position: fixed;
   display: flex;
-  z-index: 0;
+  z-index: 4;
   flex-direction: row;
   padding-left: 0;
   margin-left: 0;
@@ -789,16 +861,20 @@
 .buble {
   padding-top: 80px;
   margin-right: 0;
+  padding-bottom: 80px;
+  position: relative;
 }
 .colRight {
   background-color: cadetblue;
   margin-top: 80px;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .rowHeaderInfoCard9 {
-  width: 100%;
+  /* background-color: #232323; */
+  width: 66.7%;
   margin-left: 0;
   display: flex;
   height: 80px;
@@ -807,11 +883,11 @@
   background-color: white;
   align-items: center;
   padding-left: 20px;
+  position: fixed;
   padding-right: 20px;
-  position: absolute;
   right: 0;
   bottom: 0;
-  margin: auto;
+  margin: auto auto 0 auto;
 }
 
 .iconSearch {
@@ -825,7 +901,7 @@
 }
 
 .buttonSearch {
-  height: 50px;
+  height: 49px;
   border-bottom-left-radius: 15px;
   border-top-left-radius: 15px;
   margin-right: 10px;
@@ -837,15 +913,11 @@
   border-radius: 15px;
 }
 
-.buttonSearch:focus,
-.buttonSearch:active,
-.buttonSearch:hover,
 .buttonPlus:focus,
 .buttonPlus:active,
 .buttonPlus:hover {
-  height: 50px;
   outline: none !important;
-  box-shadow: none !important;
+  box-shadow: #7e98df;
   background-color: #232323;
 }
 
@@ -941,9 +1013,10 @@
 .iconBubleReceiver {
   margin-bottom: auto;
   margin-top: 0;
-  width: auto;
+  width: 70px;
   height: 70px;
   margin-left: 10px;
+  border-radius: 20px;
 }
 
 .bubleMessageReceiver {
@@ -987,9 +1060,10 @@
 .iconBubleSender {
   margin-bottom: auto;
   margin-top: 0;
-  width: auto;
+  width: 70px;
   height: 70px;
   margin-left: 10px;
+  border-radius: 20px;
 }
 
 .bubleMessageSender {
@@ -1083,7 +1157,7 @@
 .profileUserFriend {
   width: 82px;
   height: 82px;
-  border-radius: 30px;
+  border-radius: 20px;
   display: flex;
   margin: auto;
 }
@@ -1221,4 +1295,24 @@
   -moz-border-radius-topright: 5px;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
+}
+
+.textResponse {
+  width: auto;
+  height: auto;
+  font-size: 17px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+  color: #848484;
+  text-align: center;
+}
+
+.colResponse {
+  height: 60%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }

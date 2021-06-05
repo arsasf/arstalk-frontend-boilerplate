@@ -20,3 +20,10 @@ export const verify = (id) => {
     payload: axiosApiIntances.get(`auth/verify/${id}`),
   };
 };
+
+export const logout = (id) => {
+  return {
+    type: "LOGOUT",
+    payload: axiosApiIntances.get(`auth/logout/status-user/${id}`),
+  };
+};

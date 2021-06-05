@@ -1,0 +1,82 @@
+.bubleReceiver {
+  width: 80%;
+  margin-left: 0;
+  margin-right: auto;
+  margin-top: 20px;
+  margin-bottom: 5px;
+  display: flex;
+  flex-direction: row;
+}
+
+.iconBubleSender {
+  margin-bottom: auto;
+  margin-top: 0;
+  width: 70px;
+  height: 70px;
+  margin-left: 10px;
+  border-radius: 20px;
+}
+
+.messageReceiver {
+  font-size: 14px;
+  font-weight: 400;
+  color: #7e98df;
+}
+
+.bubleReceiver1 {
+  display: none;
+}
+
+.bubleMessageReceiver {
+  background-color: #7e98df;
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: justify;
+  padding: 20px;
+  margin-left: 20px;
+  margin-bottom: 30px;
+  border-top-left-radius: 0;
+  border-bottom-right-radius: 20px;
+  border-top-right-radius: 20px;
+  border-bottom-left-radius: 20px;
+  color: white;
+}
+
+.bubleSender {
+  width: 80%;
+  margin-right: 0;
+  display: flex;
+  flex-direction: row-reverse;
+  margin-left: auto;
+  margin-top: 5px;
+  text-align: right;
+  margin-bottom: 20px;
+}
+
+.iconBubleSender {
+  margin-bottom: auto;
+  margin-top: 0;
+  width: 70px;
+  height: 70px;
+  margin-left: 10px;
+  border-radius: 20px;
+}
+
+.bubleMessageSender {
+  background-color: #232323;
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: justify;
+  padding: 20px;
+  margin-left: 20px;
+  margin-bottom: 30px;
+  border-top-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 20px;
+  color: white;
+}

@@ -1,110 +1,81 @@
 const initialState = {
-  data: {},
+  chat: [],
+  chatId: [],
   isLoading: false,
   isError: false,
   msg: "",
 };
 
-const auth = (state = initialState, action) => {
+const chat = (state = initialState, action) => {
   switch (action.type) {
-    case "REGISTER_PENDING":
+    case "GET_HISTORY_CHAT_PENDING":
       return {
         ...state,
         isLoading: true,
         isError: false,
-        msg: "",
       };
-    case "REGISTER_FULFILLED":
+    case "GET_HISTORY_CHAT_FULFILLED":
       return {
         ...state,
         isLoading: false,
         isError: false,
-        data: action.payload.data.data,
+        chat: action.payload.data.data,
         msg: action.payload.data.msg,
       };
-    case "REGISTER_REJECTED":
+    case "GET_HISTORY_CHAT_REJECTED":
       return {
         ...state,
         isLoading: false,
         isError: true,
-        data: {},
-        msg: action.payload.response.data.msg,
-      };
-    case "VERIFY_PENDING":
-      return {
-        ...state,
-        isLoading: true,
-        isError: false,
-        msg: "",
-      };
-    case "VERIFY_FULFILLED":
-      return {
-        ...state,
-        isLoading: false,
-        isError: false,
-        data: action.payload.data.data,
-        msg: action.payload.data.msg,
-      };
-    case "VERIFY_REJECTED":
-      return {
-        ...state,
-        isLoading: false,
-        isError: true,
-        data: {},
-        msg: action.payload.response.data.msg,
-      };
-    case "LOGIN_PENDING":
-      return {
-        ...state,
-        isLoading: true,
-        isError: false,
-        msg: "",
-      };
-    case "LOGIN_FULFILLED":
-      return {
-        ...state,
-        isLoading: false,
-        isError: false,
-        data: action.payload.data.data,
-        msg: action.payload.data.msg,
-      };
-    case "LOGIN_REJECTED":
-      return {
-        ...state,
-        isLoading: false,
-        isError: true,
-        data: {},
+        chat: [],
         msg: action.payload.response.data.msg,
       };
 
-    case "LOGOUT_PENDING":
+    case "GET_HISTORY_CHAT_ID_PENDING":
       return {
         ...state,
         isLoading: true,
         isError: false,
-        msg: "",
       };
-    case "LOGOUT_FULFILLED":
-      localStorage.clear();
+    case "GET_HISTORY_CHAT_ID_FULFILLED":
       return {
         ...state,
         isLoading: false,
         isError: false,
-        data: {},
+        chatId: action.payload.data.data,
         msg: action.payload.data.msg,
       };
-    case "LOGOUT_REJECTED":
+    case "GET_HISTORY_CHAT_ID_REJECTED":
       return {
         ...state,
         isLoading: false,
         isError: true,
-        data: {},
+        chatId: [],
         msg: action.payload.response.data.msg,
       };
-
+    case "SEND_CHAT_PENDING":
+      return {
+        ...state,
+        isLoading: true,
+        isError: false,
+      };
+    case "SEND_CHAT_FULFILLED":
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        msg: action.payload.data.msg,
+      };
+    case "SEND_CHAT_REJECTED":
+      return {
+        ...state,
+        isLoading: false,
+        isError: true,
+        msg: action.payload.response.data.msg,
+      };
     default:
       return state;
   }
 };
 
-export default auth;
+export default chat;

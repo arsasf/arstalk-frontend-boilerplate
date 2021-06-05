@@ -60,13 +60,14 @@ function App() {
               exact
               component={ForgotPassword}
             />
-            <PrivateRoute socket={socket} path="/chat" exact component={Chat} />
             <PrivateRoute
-              // socket={socket}
+              socket={socket}
               path="/arstalk"
               exact
               component={ArsTalk}
             />
+            <PrivateRoute socket={socket} path="/chat" exact component={Chat} />
+
             <PublicRoute
               // socket={socket}
               path="/verify-register/:id"

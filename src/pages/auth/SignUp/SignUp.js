@@ -166,8 +166,4 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = { register };
-// (null, mapDispatchToProps)
-// (mapStateToProps)
 export default connect(mapStateToProps, mapDispatchToProps)(SignUp);
-
-// export default SignUp;

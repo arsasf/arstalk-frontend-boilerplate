@@ -4,7 +4,7 @@ import styles from "./Chat.module.css";
 import { Container, Form, Row, Col } from "react-bootstrap";
 
 function Chat(props) {
-  const username = localStorage.getItem("token");
+  const username = "aul";
 
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
