@@ -26,11 +26,11 @@ ArsTalk Chatting Real-Time is a website application to send messages in real-tim
 
 ## Built With
 
-[![Bootstrap](https://img.shields.io/badge/Bootstrap-v5.0.x-blue)](https://getbootstrap.com/)
-[![React-Bootstrap](https://img.shields.io/badge/ReactBootstrap-v1.6.0-blue)](https://getbootstrap.com/)
+[![Bootstrap](https://img.shields.io/badge/Bootstrap-v5.0.1-blue)](https://getbootstrap.com/)
+[![React-Bootstrap](https://img.shields.io/badge/ReactBootstrap-v1.6.0-purple)](https://getbootstrap.com/)
 [![React](https://img.shields.io/badge/React-v17.0.2-green)](https://reactjs.org/)
 [![Redux](https://img.shields.io/badge/Redux-v4.1.0-red)](https://redux.js.org/)
-[![Socket Io](https://img.shields.io/badge/Socketio-v4.1.2-yellow)](https://socket.io/)
+[![Socket-Io](https://img.shields.io/badge/SocketIo-v4.1.2-yellow)](https://socket.io/)
 
 ## Getting Started
 
