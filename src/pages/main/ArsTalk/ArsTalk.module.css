@@ -5,9 +5,58 @@
   /* background-color: aqua; */
 }
 
+.boxToast {
+  position: absolute;
+  right: 0;
+  display: flex;
+  z-index: 99;
+  background-color: #232323;
+}
+
+.toast {
+  background-color: #232323;
+  color: white;
+}
+
+.boxChatBubbleSender {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: row-reverse;
+  padding: 1em;
+}
+
+.boxChatBubbleReceiver {
+  display: flex;
+  align-items: center;
+  padding: 1em;
+}
+
+.textMessageSender {
+  background-color: #7e98df;
+  color: white;
+  font-weight: 500;
+  padding: 1em;
+  margin-right: 1em;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  border-top-left-radius: 15px;
+}
+
+.textMessageReceiver {
+  background-color: #232323;
+  color: white;
+  font-weight: 500;
+  padding: 0.5em;
+  margin-left: 1em;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
 .left {
   background-color: white;
-  overflow-y: scroll;
+  overflow-y: auto;
   height: 655px;
 }
 
@@ -30,16 +79,14 @@
 }
 
 .right {
-  /* position: relative; */
   background-color: #fafafa;
-  overflow-y: scroll;
+  overflow-y: auto;
   display: flex;
   flex-direction: row;
   height: 655px;
   padding-left: 0;
   padding-right: 0;
   position: relative;
-  /* padding-right: 10px; */
   background: radial-gradient(#e2e0e0 3px, transparent 4px),
     radial-gradient(#e2e0e0 3px, transparent 4px),
     linear-gradient(#fafafa 4px, transparent 0),
@@ -994,9 +1041,8 @@
   height: auto;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-end;
   padding-bottom: 0;
-  /* background-color: violet; */
   margin-bottom: 0;
 }
 
@@ -1315,4 +1361,36 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+@media (max-width: 1199.98px) {
+  .rowHeaderInfoCard8 {
+    position: relative !important;
+  }
+
+  .right {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .rightProfile {
+    position: relative;
+    display: flex;
+    width: 100%;
+  }
+
+  .left {
+    position: relative !important;
+  }
+
+  .rowHeaderInfoCard {
+    width: 100%;
+    position: relative !important;
+  }
+
+  .rowHeaderInfoCard9 {
+    width: 100%;
+  }
 }

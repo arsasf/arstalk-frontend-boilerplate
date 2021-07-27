@@ -14,6 +14,7 @@ import {
   InputGroup,
   ButtonGroup,
   Modal,
+  Toast,
 } from "react-bootstrap";
 //* ============================ End =============================== */
 
@@ -108,10 +109,15 @@ function ArsTalk(props) {
     image: "",
     receiver_name: "",
   });
-
+  const [notif, setNotif] = useState({
+    show: false,
+  });
+  const [typing, setTyping] = useState({ isTyping: false });
   const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState(
+    props.chat.length > 0 ? props.chat : []
+  );
   const [userOnline, setUserOnline] = useState([]);
-  // const [roomUsers, setRoomUsers] = useState([]);
   const [connectedRooms, setConnectedRooms] = useState({
     room: "",
     oldRoom: "",
@@ -123,7 +129,6 @@ function ArsTalk(props) {
   let [getDataContact] = useState([]);
   let [getRoomChat] = useState([]);
   let [getAllHistoryChat] = useState([]);
-  const [userLogin, setUserLogin] = useState({});
 
   useEffect(() => {
     getData();
@@ -134,44 +139,40 @@ function ArsTalk(props) {
       connect();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getData, getDataContact, getRoomChat, getAllHistoryChat, props.socket]);
+  }, [
+    getData,
+    getDataContact,
+    getRoomChat,
+    getAllHistoryChat,
+    props.socket,
+    message,
+  ]);
   const connect = () => {
     const id = props.auth.data.user_id;
     props.socket.emit("connect-server", id);
     props.socket.on("list-user-online", (listUserOnline) => {
       setUserOnline(listUserOnline);
     });
-
-    // props.socket.on("room-users", (roomUsers) => {
-    //   const listRoom = roomUsers.filter((element) => element.userid !== userid);
-    //   setRoomUsers(listRoom);
-    // });
-    // props.socket.on("chat-message", (dataMessage) => {
-    //   setMessages([...messages, dataMessage]);
-    // });
-    // props.socket.on("notif-message", (data) => {
-    //   setNotif(data);
-    // });
-    // props.socket.on("typing-message", (data) => {
-    //   setTyping(data);
-    // });
+    props.socket.on("chat-message", (dataMessage) => {
+      console.log();
+      setMessages([...messages, dataMessage]);
+    });
+    props.socket.on("notif-message", (data) => {
+      setNotif(data);
+    });
+    props.socket.on("typing-message", (data) => {
+      setTyping(data);
+    });
   };
-
   //* ======================Integration User ====================== */
   getData = () => {
     const id = props.auth.data.user_id;
     props
       .getUserById(id)
       .then((result) => {
-        setShow(false);
-        setInfo("GET DATA");
-        setMsg(result.value.data.msg);
         props.history.push("/arstalk");
-        setUserLogin(result.value.data.data[0]);
       })
       .catch((err) => {
-        setShow(false);
-        setMsg(err.response.data.msg);
         props.history.push("/arstalk");
       });
   };
@@ -396,50 +397,83 @@ function ArsTalk(props) {
   };
 
   const setDataChat = (param1, param2, param3, param4) => {
-    // props.socket.emit("join-room", {
-    //   room: param1,
-    //   oldRoom: connectedRooms.oldRoom,
-    // });
+    props.socket.emit("join-room", {
+      room: param1,
+      oldRoom: connectedRooms.oldRoom,
+    });
     setFormChat({
       room_chat: param1,
       receiver_id: param2,
       image: param3,
       receiver_name: param4,
     });
+    setConnectedRooms({ ...connectedRooms, room: param1, oldRoom: param1 });
+    console.log(props);
+
+    props
+      .getHistoryChatById(param1)
+      .then((res) => {
+        setMessages(res.value.data.data);
+      })
+      .catch((err) => {
+        setMessages([]);
+      });
   };
 
   const changeMessage = (event) => {
     setMessage(event.target.value);
+    props.socket.emit("typing-message", {
+      room: connectedRooms.room,
+      isTyping: true,
+    });
   };
 
-  const handleAddMessage = () => {
+  const handleAddMessage = (param) => {
     const id = props.auth.data.user_id;
-    const setData = {
+    const data = {
+      room: connectedRooms.room,
+      senderId: id,
       receiverId: formChat.receiver_id,
-      message: message,
+      image: props.auth.data.image,
+      message: param,
+      show: true,
+      username: props.auth.data.user_fullname,
     };
-    props
-      .sendChat(id, setData)
-      .then((result) => {
-        setMessage("");
-        setShow(false);
-        setInfo("ADD ROOM CHAT");
-        setMsg(result.value.data.msg);
-        props.getHistoryChat(id);
-      })
-      .catch((err) => {
-        setMessage("");
-        setShow(true);
-        setInfo("ERROR : ADD ROOM FRIEND");
-        setMsg(err.response.data.msg);
-      });
-  };
-  console.log(userOnline);
 
+    props.socket.emit("send-message", data);
+    props.socket.emit("notif-message", data);
+    props.sendChat(data);
+    setMessage("");
+  };
+
+  const handleStopTyping = () => {
+    setTimeout(() => {
+      props.socket.emit("typing-message", {
+        room: connectedRooms.room,
+        isTyping: false,
+      });
+    }, 3000);
+  };
   //*======================== End ================================= */
 
   return (
     <Container fluid className={styles.container}>
+      {console.log(notif.show)}
+      <div className={styles.boxToast}>
+        <Toast
+          onClose={() => setNotif({ ...notif, show: false })}
+          show={notif.show}
+          delay={3000}
+          autohide
+          className={styles.toast}
+        >
+          <Toast.Header closeButton={false}>
+            <strong className="me-auto">{notif.username}'s Message</strong>
+            <small className="text-muted">just now</small>
+          </Toast.Header>
+          <Toast.Body className={styles.bodyToast}>{notif.message}</Toast.Body>
+        </Toast>
+      </div>
       <Modal show={show} className={styles.modal}>
         <Modal.Header className={styles.modalHeader}>
           <Modal.Title className={styles.modalTitle}>INFO {info}</Modal.Title>
@@ -542,9 +576,15 @@ function ArsTalk(props) {
           </Col>
         ) : //! BELUM DI INTEGRASI
         accountContact === false ? (
-          <Col lg={8} className={styles.right}>
+          <Col lg={8} md={12} xs={12} sm={12} className={styles.right}>
             <Col className={styles.rightProfile}>
-              <Col className={styles.rowHeaderInfoCard8} lg={11}>
+              <Col
+                className={styles.rowHeaderInfoCard8}
+                lg={11}
+                md={11}
+                xs={11}
+                sm={11}
+              >
                 <Image
                   src={`${process.env.REACT_APP_IMAGE_URL}${formChat.image}`}
                   className={styles.iconFriend}
@@ -557,6 +597,10 @@ function ArsTalk(props) {
                     {userOnline.includes(formChat.receiver_id)
                       ? "Online"
                       : "Offline"}
+                    {typing.isTyping && (
+                      // <p>
+                      <em> writing a message...</em>
+                    )}
                   </p>
                 </Col>
               </Col>
@@ -573,27 +617,33 @@ function ArsTalk(props) {
             <Col className={styles.colright}>
               <Row className={styles.buble}>
                 <Col className={styles.colRightLeft}>
-                  {props.chat.chat.map((item, index) => {
-                    if (item.room_chat === formChat.room_chat) {
-                      return (
-                        <Col key={index}>
-                          <ChatBubleComponent
-                            dataChatHistoryId={item}
-                            formChat={formChat}
-                          />
-                        </Col>
-                      );
-                    } else {
-                      // return (
-                      //   <Col key={index}>
-                      //     <ChatBubleComponent
-                      //       dataChatHistoryId={item}
-                      //       formChat={formChat}
-                      //     />
-                      //   </Col>
-                      // );
-                    }
-                  })}
+                  {messages.length > 0 &&
+                    messages.map((item, index) => (
+                      <div
+                        className={
+                          item.senderId === props.auth.data.user_id ||
+                          item.sender_id === props.auth.data.user_id
+                            ? styles.boxChatBubbleSender
+                            : styles.boxChatBubbleReceiver
+                        }
+                      >
+                        <Image
+                          src={`${process.env.REACT_APP_IMAGE_URL}${item.image}`}
+                          className={styles.iconFriend}
+                        />
+                        <h6
+                          key={index}
+                          className={
+                            item.senderId === props.auth.data.user_id ||
+                            item.sender_id === props.auth.data.user_id
+                              ? styles.textMessageSender
+                              : styles.textMessageReceiver
+                          }
+                        >
+                          {item.message}
+                        </h6>
+                      </div>
+                    ))}
                 </Col>
               </Row>
             </Col>
@@ -605,7 +655,10 @@ function ArsTalk(props) {
                     placeholder="Type Your Message..."
                     className={styles.placeholderRight}
                     value={message}
-                    onChange={(event) => changeMessage(event)}
+                    onChange={(event) => {
+                      changeMessage(event);
+                      handleStopTyping();
+                    }}
                   />
                   <p className={styles.colAttachment}>
                     <Dropdown className={styles.dropdownSort}>
@@ -647,7 +700,7 @@ function ArsTalk(props) {
               <Button
                 variant="dark"
                 type="submit"
-                onClick={() => handleAddMessage()}
+                onClick={() => handleAddMessage(message)}
               >
                 Send
               </Button>
@@ -670,6 +723,7 @@ function ArsTalk(props) {
                     {userOnline.includes(formChat.receiver_id)
                       ? "Online"
                       : "Offline"}
+                    {typing.isTyping && <em> writing a message...</em>}
                   </p>
                 </Col>
               </Col>
@@ -677,26 +731,33 @@ function ArsTalk(props) {
             <Col className={styles.colright} lg={8}>
               <Row className={styles.buble}>
                 <Col className={styles.colRightLeft}>
-                  <p className={styles.bubleReceiver}>
-                    <Image
-                      src={ImgProfile}
-                      className={styles.iconBubleReceiver}
-                    />
-                    <p className={styles.bubleMessageReceiver}>
-                      Hello ! How are you today?
-                      <p className={styles.timeBubleReceiver}>08:00</p>
-                    </p>
-                  </p>
-                  <p className={styles.bubleSender}>
-                    <Image
-                      src={form.userImage}
-                      className={styles.iconBubleSender}
-                    />
-                    <p className={styles.bubleMessageSender}>
-                      Hi, not bad...
-                      <p className={styles.timeBubleSender}>08:05</p>
-                    </p>
-                  </p>
+                  {messages.length > 0 &&
+                    messages.map((item, index) => (
+                      <div
+                        className={
+                          item.senderId === props.auth.data.user_id ||
+                          item.sender_id === props.auth.data.user_id
+                            ? styles.boxChatBubbleSender
+                            : styles.boxChatBubbleReceiver
+                        }
+                      >
+                        <Image
+                          src={`${process.env.REACT_APP_IMAGE_URL}${item.image}`}
+                          className={styles.iconFriend}
+                        />
+                        <h6
+                          key={index}
+                          className={
+                            item.senderId === props.auth.data.user_id ||
+                            item.sender_id === props.auth.data.user_id
+                              ? styles.textMessageSender
+                              : styles.textMessageReceiver
+                          }
+                        >
+                          {item.message}
+                        </h6>
+                      </div>
+                    ))}
                 </Col>
               </Row>
             </Col>

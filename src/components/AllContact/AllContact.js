@@ -127,14 +127,14 @@ function AllContact(props) {
     props
       .addFriendContact(setData, id)
       .then((result) => {
-        setShow(true);
-        setInfo("ADD FRIEND");
-        setMsg(result.value.data.msg);
+        // setShow(true);
+        // setInfo("ADD FRIEND");
+        // setMsg(result.value.data.msg);
       })
       .catch((err) => {
-        setShow(true);
-        setInfo("ERROR : ADD FRIEND");
-        setMsg(err.response.data.msg);
+        // setShow(true);
+        // setInfo("ERROR : ADD FRIEND");
+        // setMsg(err.response.data.msg);
       });
   };
   //* =============================== End ============================ */
@@ -176,20 +176,7 @@ function AllContact(props) {
   //* =============================== End ============================ */
 
   //* ================== Integration Chat ============================ */
-  // const getChatRoomId = () => {
-  //   const id = props.auth.data.user_id;
-  //   const room = props.dataRoomChat.room_chat;
-  //   const setData = {
-  //     room: room,
-  //   };
-  //   props
-  //     .getHistoryChatById(id, setData)
-  //     .then((result) => {
-  //       console.log(result);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
+
   // };
 
   //* =============================== End ============================ */
