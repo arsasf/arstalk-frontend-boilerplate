@@ -16,6 +16,7 @@ import Counter from "./pages/main/Counter/CounterFunctional";
 
 import io from "socket.io-client";
 import ArsTalk from "./pages/main/ArsTalk/ArsTalk";
+import ChatArs from "./pages/Chat/Chat";
 import Verify from "./pages/auth/Verify/Verify";
 
 function App() {
@@ -67,6 +68,12 @@ function App() {
               component={ArsTalk}
             />
             <PrivateRoute socket={socket} path="/chat" exact component={Chat} />
+            <PrivateRoute
+              socket={socket}
+              path="/chat-arstalk"
+              exact
+              component={ChatArs}
+            />
 
             <PublicRoute
               // socket={socket}

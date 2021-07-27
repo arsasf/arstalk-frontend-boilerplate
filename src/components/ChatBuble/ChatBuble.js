@@ -4,15 +4,12 @@ import ProfileDefault from "../../assets/img/img-not-found.png";
 import { connect } from "react-redux";
 
 function ChatBuble(props) {
-  console.log(props);
   return (
     <>
       {props.auth.data.user_id !== props.dataChatHistoryId.receiver_id ? (
         props.dataChatHistoryId.sender_id === props.dataChatHistoryId.user_id ||
         props.formChat.receiver_id === props.dataChatHistoryId.user_id ? (
           <p className={styles.bubleReceiver1}>
-            {console.log(true)}
-
             {props.formChat.image === "" ? (
               <Image src={ProfileDefault} className={styles.iconBubleSender} />
             ) : (
@@ -22,7 +19,7 @@ function ChatBuble(props) {
               />
             )}
             {props.dataChatHistoryId.message === "" ? (
-              console.log(true)
+              ""
             ) : (
               <p className={styles.bubleMessageReceiver}>
                 {props.dataChatHistoryId.message}
@@ -55,8 +52,6 @@ function ChatBuble(props) {
           props.dataChatHistoryId.user_id ||
         props.formChat.receiver_id === props.dataChatHistoryId.user_id ? (
         <p className={styles.bubleReceiver}>
-          {console.log(true)}
-
           {props.formChat.image === "" ? (
             <Image src={ProfileDefault} className={styles.iconBubleSender} />
           ) : (
@@ -66,7 +61,7 @@ function ChatBuble(props) {
             />
           )}
           {props.dataChatHistoryId.message === "" ? (
-            console.log(true)
+            ""
           ) : (
             <p className={styles.bubleMessageReceiver}>
               {props.dataChatHistoryId.message}

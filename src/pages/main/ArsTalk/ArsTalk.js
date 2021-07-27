@@ -1,8 +1,7 @@
 //! ============================== ARSTALK ======================== */
 
 //* =========================== Import React ====================== */
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import {
   Container,
@@ -41,28 +40,27 @@ import styles from "./ArsTalk.module.css";
 //* ================================== End ========================= */
 
 //* ============================ Import Image ====================== */
-import Setting from "../../../assets/img/setting.png";
 import Contact from "../../../assets/img/contact.png";
-import InviteFriends from "../../../assets/img/invite-friends.png";
-import FAQ from "../../../assets/img/FAQ.png";
-import Search from "../../../assets/img/Search.png";
 import Plus from "../../../assets/img/Plus.png";
 import ImgProfile from "../../../assets/img/img-profile.png";
 import Back from "../../../assets/img/back.png";
-import Key from "../../../assets/img/key.png";
-import Logout from "../../../assets/img/logout.png";
 import Menu from "../../../assets/img/menu.png";
 import Emoticon from "../../../assets/img/emoticon.png";
 import Video from "../../../assets/img/video.png";
 import Images from "../../../assets/img/Image.png";
 import Documents from "../../../assets/img/Documents.png";
 import Locations from "../../../assets/img/Location.png";
-import ProfileDefault from "../../../assets/img/img-not-found.png";
-import PageSearch from "../../../assets/img/chat.png";
 //* =========================== End ================================ */
 
 //* ================ Import Component ============================== */
 import AllContact from "../../../components/AllContact/AllContact";
+import NavMenu from "../../../components/NavMenu";
+import MenuSearch from "../../../components/MenuSearch";
+import MenuContact from "../../../components/Contact";
+import MenuChat from "../../../components/Chat";
+import MenuChangePassword from "../../../components/ChangePassword";
+import MenuAddFriend from "../../../components/AddFriend";
+import MenuAccountSetting from "../../../components/AccountSetting";
 import ChatBubleComponent from "../../../components/ChatBuble/ChatBuble";
 //* =============================== End ============================ */
 
@@ -108,23 +106,59 @@ function ArsTalk(props) {
     room_chat: null,
     receiver_id: null,
     image: "",
+    receiver_name: "",
   });
 
   const [message, setMessage] = useState("");
-
+  const [userOnline, setUserOnline] = useState([]);
+  // const [roomUsers, setRoomUsers] = useState([]);
+  const [connectedRooms, setConnectedRooms] = useState({
+    room: "",
+    oldRoom: "",
+    isChannel: false,
+  });
   //* ============================== End ========================= */
 
+  let [getData] = useState([]);
+  let [getDataContact] = useState([]);
+  let [getRoomChat] = useState([]);
+  let [getAllHistoryChat] = useState([]);
+  const [userLogin, setUserLogin] = useState({});
+
   useEffect(() => {
-    console.log("GET DATA RUNNING");
     getData();
     getDataContact();
     getRoomChat();
     getAllHistoryChat();
+    if (props.socket) {
+      connect();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [getData, getDataContact, getRoomChat, getAllHistoryChat, props.socket]);
+  const connect = () => {
+    const id = props.auth.data.user_id;
+    props.socket.emit("connect-server", id);
+    props.socket.on("list-user-online", (listUserOnline) => {
+      setUserOnline(listUserOnline);
+    });
+
+    // props.socket.on("room-users", (roomUsers) => {
+    //   const listRoom = roomUsers.filter((element) => element.userid !== userid);
+    //   setRoomUsers(listRoom);
+    // });
+    // props.socket.on("chat-message", (dataMessage) => {
+    //   setMessages([...messages, dataMessage]);
+    // });
+    // props.socket.on("notif-message", (data) => {
+    //   setNotif(data);
+    // });
+    // props.socket.on("typing-message", (data) => {
+    //   setTyping(data);
+    // });
+  };
 
   //* ======================Integration User ====================== */
-  const getData = () => {
+  getData = () => {
     const id = props.auth.data.user_id;
     props
       .getUserById(id)
@@ -133,6 +167,7 @@ function ArsTalk(props) {
         setInfo("GET DATA");
         setMsg(result.value.data.msg);
         props.history.push("/arstalk");
+        setUserLogin(result.value.data.data[0]);
       })
       .catch((err) => {
         setShow(false);
@@ -140,7 +175,6 @@ function ArsTalk(props) {
         props.history.push("/arstalk");
       });
   };
-
   const resetImage = () => {
     setForm({
       ...form,
@@ -152,12 +186,12 @@ function ArsTalk(props) {
   const handleImage = (event) => {
     setForm({
       ...form,
-      userImage: URL.createObjectURL(event.target.files[0]),
-      image: event.target.files[0],
+      userImage: URL.createObjectURL(event),
+      image: event,
     });
     const id = props.auth.data.user_id;
     const formData = new FormData();
-    formData.append("image", event.target.files[0]);
+    formData.append("image", event);
 
     //* ==================== Check Form Data ===================== */
     // for (var pair of formData.entries()) {
@@ -191,6 +225,7 @@ function ArsTalk(props) {
   };
 
   const changeText = (event) => {
+    console.log(event);
     setForm({
       ...form,
       [event.target.name]: event.target.value,
@@ -246,12 +281,17 @@ function ArsTalk(props) {
 
   const handleLogout = () => {
     const id = props.auth.data.user_id;
+
     props
       .logout(id)
       .then((result) => {
         setShow(true);
         setInfo("LOGOUT");
         setMsg(result.value.data.msg);
+        props.socket.emit("disconnect-server", {
+          id,
+          room: connectedRooms.room,
+        });
         setTimeout(() => {
           props.history.push("/");
           localStorage.clear();
@@ -267,7 +307,7 @@ function ArsTalk(props) {
   //* ========================= End Integration User ============== */
 
   //*=============================== Contact ======================= */
-  const getDataContact = () => {
+  getDataContact = () => {
     const id = props.auth.data.user_id;
     props
       .getAllcontact(id, search)
@@ -343,23 +383,28 @@ function ArsTalk(props) {
   //* ================ End Integration Contact ==================== */
 
   //* ================= Integration Room Chat ===================== */
-  const getRoomChat = () => {
+  getRoomChat = () => {
     const id = props.auth.data.user_id;
     props.getAllRoomChat(id);
   };
   //*======================== End ================================= */
 
   //* ================= Integration Chat ===================== */
-  const getAllHistoryChat = () => {
+  getAllHistoryChat = () => {
     const id = props.auth.data.user_id;
     props.getHistoryChat(id);
   };
 
-  const setDataChat = (param1, param2, param3) => {
+  const setDataChat = (param1, param2, param3, param4) => {
+    // props.socket.emit("join-room", {
+    //   room: param1,
+    //   oldRoom: connectedRooms.oldRoom,
+    // });
     setFormChat({
       room_chat: param1,
       receiver_id: param2,
       image: param3,
+      receiver_name: param4,
     });
   };
 
@@ -367,11 +412,7 @@ function ArsTalk(props) {
     setMessage(event.target.value);
   };
 
-  console.log(formChat);
-  console.log(message);
-
   const handleAddMessage = () => {
-    console.log("running send msg");
     const id = props.auth.data.user_id;
     const setData = {
       receiverId: formChat.receiver_id,
@@ -392,25 +433,9 @@ function ArsTalk(props) {
         setInfo("ERROR : ADD ROOM FRIEND");
         setMsg(err.response.data.msg);
       });
-    console.log(id, setData);
   };
+  console.log(userOnline);
 
-  const getChatRoomId = (room) => {
-    console.log(room);
-    const id = props.receiver_id;
-    const setData = {
-      room: formChat.room_chat,
-    };
-    console.log(setData);
-    props
-      .getHistoryChatById(id, setData)
-      .then((result) => {
-        console.log(result);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
   //*======================== End ================================= */
 
   return (
@@ -433,85 +458,15 @@ function ArsTalk(props) {
       <Row>
         {/* // ! PROSES INTEGRASI CREATE ROOM CHAT == LIST ROOM CHAT ==*/}
         {setting === false ? (
-          <Col lg={4} className={`${styles.left}`}>
-            <Col className={styles.rowHeaderInfoCard}>
-              <Link
-                to="#"
-                className={styles.infoCard}
-                onClick={() => showMessage(false, false)}
-              >
-                ArsTalk
-              </Link>
-              <Dropdown className={styles.dropdownSort}>
-                <Dropdown.Toggle
-                  variant="#fff"
-                  title="sort"
-                  id="dropdown-basic"
-                  className={styles.titleSort}
-                >
-                  <span className={styles.line}></span>
-                  <span className={styles.lineMid}></span>
-                  <span className={styles.line}></span>
-                </Dropdown.Toggle>
-                <Dropdown.Menu align="right" className={styles.menuDropdown}>
-                  <Dropdown.Item
-                    onClick={() =>
-                      handleSettings(true, false, false, false, false)
-                    }
-                    className={styles.listSort}
-                  >
-                    <Image src={Setting} className={styles.icon} />
-                    <p className={styles.textIcon}>Settings</p>
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    className={styles.listSort}
-                    onClick={() =>
-                      handleSettings(true, true, false, false, false)
-                    }
-                  >
-                    <Image src={Contact} className={styles.icon} />
-                    <p className={styles.textIcon}>Contacts</p>
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    className={styles.listSort}
-                    onClick={() =>
-                      handleSettings(true, true, true, false, false)
-                    }
-                  >
-                    <Image src={InviteFriends} className={styles.icon} />
-                    <p className={styles.textIcon}>Invite Friends</p>
-                  </Dropdown.Item>
-                  <Dropdown.Item className={styles.listSort}>
-                    <Image src={FAQ} className={styles.icon} />
-                    <p className={styles.textIcon}>ArsTalk FAQ</p>
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </Col>
-            <Col className={styles.rowHeaderInfoCard1}>
-              <Form.Group className={styles.formGroup}>
-                <InputGroup>
-                  <Button variant="fff" className={styles.buttonSearch}>
-                    <Image src={Search} className={styles.iconSearch} />
-                  </Button>
-                  <Form.Control
-                    type="text"
-                    placeholder="Type Your Message..."
-                    className={styles.placeholder}
-                  />
-                </InputGroup>
-              </Form.Group>
-              <Button
-                variant="fff"
-                className={styles.buttonPlus}
-                onClick={() => {
-                  handleSettings(true, true, true, true, false);
-                  getDataContact();
-                }}
-              >
-                <Image src={Plus} />
-              </Button>
-            </Col>
+          <Col lg={4} md={12} sm={12} xs={12} className={`${styles.left}`}>
+            <NavMenu
+              showMessage={showMessage.bind()}
+              handleSettings={handleSettings.bind()}
+            />
+            <MenuSearch
+              handleSettings={handleSettings.bind()}
+              getDataContact={getDataContact.bind()}
+            />
             {props.roomchat.roomchat.map((item, index) => {
               return (
                 <Col key={index}>
@@ -519,7 +474,6 @@ function ArsTalk(props) {
                     dataRoomChat={item}
                     showMessage={showMessage.bind()}
                     setData={setDataChat.bind()}
-                    // dataChatHistoryId={getChatRoomId.bind()}
                   />
                 </Col>
               );
@@ -527,302 +481,55 @@ function ArsTalk(props) {
           </Col>
         ) : //! INI SUDAH DI INTEGRASI == SETTINGS ==  (MINUS CHANGE PASSWORD)
         contact === false ? (
-          <Col lg={4} className={styles.left}>
-            <Col className={styles.rowHeaderInfoCard3}>
-              <Image
-                src={Back}
-                onClick={() => handleBack(false)}
-                className={styles.iconBack}
-              />
-              <h1 className={styles.username}>Account Settings</h1>
-            </Col>
-            <Col className={styles.rowHeaderInfoCard16}>
-              <Form.Group className={styles.formUserImage}>
-                <Form.Label htmlFor="files" className={styles.boxUpdateImage}>
-                  Jangan di hapus !
-                </Form.Label>
-                <Form.Control
-                  type="file"
-                  id="files"
-                  onChange={(event) => handleImage(event)}
-                  className={styles.updateImage}
-                />
-                {form.image === "" ? (
-                  <Image src={ProfileDefault} className={styles.profileUser} />
-                ) : (
-                  <Image src={form.userImage} className={styles.profileUser} />
-                )}
-              </Form.Group>
-              <Form.Control
-                className={styles.placeholderFullname}
-                name="userFullname"
-                value={form.userFullname}
-                onChange={(event) => changeText(event)}
-              />
-              <p className={styles.usernameProfile}>{form.userName}</p>
-            </Col>
-            <Col className={styles.rowHeaderInfoCard5}>
-              <p className={styles.account}>Account</p>
-              <Form.Control
-                className={styles.placeholderPhone}
-                name="userPhone"
-                placeholder="input phone number"
-                value={form.userPhone}
-                onChange={(event) => changeText(event)}
-              />
-              <p className={styles.changePhone}>Tap to change phone number</p>
-            </Col>
-            <Col className={styles.rowHeaderInfoCard5}>
-              <hr className={styles.lineAccount} />
-              <Form.Control
-                className={styles.placeholderUsername}
-                name="userName"
-                placeholder="input username"
-                value={form.userName}
-                onChange={(event) => changeText(event)}
-              />
-              <p className={styles.titleInputUsername}>username</p>
-              <hr className={styles.lineAccount} />
-            </Col>
-            <Col className={styles.rowHeaderInfoCard5}>
-              <Form.Control
-                className={styles.placeholderBio}
-                name="userBio"
-                placeholder="input biodata"
-                value={form.userBio}
-                onChange={(event) => changeText(event)}
-              />
-              <p className={styles.titleInputBio}>Bio</p>
-            </Col>
-            {update === true ? (
-              <Col className={styles.boxButtonUpdate}>
-                <Button
-                  variant="dark"
-                  className={styles.buttonCancel}
-                  onClick={() => resetData()}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  variant="fff"
-                  className={styles.buttonUpdate}
-                  onClick={() => updateData()}
-                >
-                  Update Profile
-                </Button>
-              </Col>
-            ) : (
-              console.log(false)
-            )}
-            <Col className={styles.rowHeaderInfoCard5}>
-              <p className={styles.userSetting}>Settings</p>
-              <Col
-                className={styles.colChangeLogout}
-                onClick={() => handleSettings(true, true, true, true, true)}
-              >
-                <Image src={Key} className={styles.iconChange} />
-                <p className={styles.titleUserSetting}>Change Password</p>
-              </Col>
-              <Col className={styles.colChangeLogout1} onClick={handleLogout}>
-                <Image src={Logout} className={styles.iconChange} />
-                <p className={styles.titleUserSetting}>Logout</p>
-              </Col>
-            </Col>
+          <Col lg={4} md={12} sm={12} xs={12} className={styles.left}>
+            <MenuAccountSetting
+              handleBack={handleBack.bind()}
+              handleImage={handleImage.bind()}
+              handleSettings={handleSettings.bind()}
+              handleLogout={handleLogout.bind()}
+              changeText={changeText.bind()}
+              user={props.user}
+              form={form}
+              update={update}
+              resetData={resetData.bind()}
+              updateData={updateData.bind()}
+            />
           </Col>
         ) : // ! INI SUDAH DI INTEGRASI == CONTACT == (FIX ALL)
         addFriend === false ? (
-          <Col lg={4} className={styles.left}>
-            <Col className={styles.rowHeaderInfoCard3}>
-              <Image
-                src={Back}
-                onClick={() => handleBack(false)}
-                className={styles.iconBack}
-              />
-              <h1 className={styles.username}>Contacts</h1>
-            </Col>
-            <Col className={styles.rowHeaderInfoCard1}>
-              <Form.Group className={styles.formGroup}>
-                <InputGroup>
-                  <Button variant="fff" className={styles.buttonSearch}>
-                    <Image src={Search} className={styles.iconSearch} />
-                  </Button>
-                  <Form.Control
-                    type="text"
-                    placeholder="Type your name friend..."
-                    className={styles.placeholder}
-                    name="search"
-                    value={search}
-                    onChange={(event) => changeInputSearch(event)}
-                  />
-                </InputGroup>
-              </Form.Group>
-              <Button
-                variant="fff"
-                className={styles.buttonContact}
-                onClick={() => getDataContact()}
-              >
-                <Image src={Contact} />
-              </Button>
-            </Col>
-            {props.contact.contact.map((item, index) => {
-              return (
-                <Col key={index}>
-                  <AllContact contactList={item} />
-                </Col>
-              );
-            })}
-          </Col>
+          <MenuContact
+            handleBack={handleBack.bind()}
+            search={search}
+            changeInputSearch={changeInputSearch.bind()}
+            getDataContact={getDataContact.bind()}
+            contact={props.contact.contact}
+          />
         ) : // ! INI SUDAH DI INTEGRASI == ADD FRIEND == (FIX ALL)
         chat === false ? (
-          <Col lg={4} className={styles.left}>
-            <Col className={styles.rowHeaderInfoCard3}>
-              <Image
-                src={Back}
-                onClick={() => handleBack(false)}
-                className={styles.iconBack}
-              />
-              <h1 className={styles.username}>Add Friends</h1>
-            </Col>
-            <Col className={styles.rowHeaderInfoCard1}>
-              <Form.Group className={styles.formGroup}>
-                <InputGroup>
-                  <Button variant="fff" className={styles.buttonSearch}>
-                    <Image src={Search} className={styles.iconSearch} />
-                  </Button>
-                  <Form.Control
-                    type="text"
-                    placeholder="Type Your Friend's Email..."
-                    className={styles.placeholder}
-                    name="search"
-                    value={search}
-                    onChange={(event) => changeInputSearch(event)}
-                  />
-                </InputGroup>
-              </Form.Group>
-              <Button
-                variant="fff"
-                className={styles.buttonContact}
-                onClick={() => foundUserByEmail()}
-              >
-                <Image src={Contact} />
-              </Button>
-            </Col>
-            {error === false ? (
-              props.contact.contact.map((item, index) => {
-                return (
-                  <Col key={index}>
-                    <AllContact
-                      dataSearch={item}
-                      search={search}
-                      changeButtonFriend={changeButtonFriend}
-                    />
-                  </Col>
-                );
-              })
-            ) : (
-              <Col className={styles.colResponse}>
-                <Image className={styles.textResponse} src={PageSearch} />
-                <p className={styles.textResponse}>
-                  {pageAddFriend === false
-                    ? "Search your friend here ..."
-                    : msg}
-                </p>
-              </Col>
-            )}
-          </Col>
+          <MenuAddFriend
+            handleBack={handleBack.bind()}
+            search={search}
+            changeInputSearch={changeInputSearch.bind()}
+            foundUserByEmail={foundUserByEmail.bind()}
+            error={error}
+            changeButtonFriend={changeButtonFriend}
+            pageAddFriend={pageAddFriend}
+            msg={msg}
+            contact={props.contact.contact}
+          />
         ) : //! INI SUDAH DI INTEGRASI == CHOOSE CONTACT FOR CHAT== (FIX ALL)
         changePassword === false ? (
-          <Col lg={4} className={styles.left}>
-            <Col className={styles.rowHeaderInfoCard3}>
-              <Image
-                src={Back}
-                onClick={() => handleBack(false)}
-                className={styles.iconBack}
-              />
-              <h1 className={styles.username}>Choose Contact</h1>
-            </Col>
-            <Col className={styles.rowHeaderInfoCard1}>
-              <Form.Group className={styles.formGroup}>
-                <InputGroup>
-                  <Button variant="fff" className={styles.buttonSearch}>
-                    <Image src={Search} className={styles.iconSearch} />
-                  </Button>
-                  <Form.Control
-                    type="text"
-                    placeholder="Type Your Friend's Name..."
-                    className={styles.placeholder}
-                    name="search"
-                    value={search}
-                    onChange={(event) => changeInputSearch(event)}
-                  />
-                </InputGroup>
-              </Form.Group>
-              <Button
-                variant="fff"
-                className={styles.buttonContact}
-                onClick={() => getDataContact()}
-              >
-                <Image src={Contact} />
-              </Button>
-            </Col>
-            {props.contact.contact.map((item, index) => {
-              return (
-                <Col key={index}>
-                  <AllContact
-                    dataContact={item}
-                    handleBack={handleBack.bind()}
-                  />
-                </Col>
-              );
-            })}
-          </Col>
+          <MenuChat
+            handleBack={handleBack.bind()}
+            search={search}
+            changeInputSearch={changeInputSearch.bind()}
+            getDataContact={getDataContact.bind()}
+            contact={props.contact.contact}
+          />
         ) : (
           //! BELUM DI INTEGRASI
-          <Col lg={4} className={styles.left}>
-            <Col className={styles.rowHeaderInfoCard3}>
-              <Image
-                src={Back}
-                onClick={() => handleBack(false)}
-                className={styles.iconBack}
-              />
-              <h1 className={styles.username}>{form.userName}</h1>
-            </Col>
-            <Col className={styles.rowHeaderInfoCard7}>
-              <Form.Group className={styles.formGroupPassword}>
-                <Form.Label className={styles.textLabel}>
-                  New Password
-                </Form.Label>
-                <Form.Control
-                  type="Password"
-                  placeholder="Enter New Password"
-                  // value={username}
-                  // onChange={(event) => changeText(event)}
-                  required
-                  className={styles.placeholderPassword}
-                />
-              </Form.Group>
 
-              <Form.Group className={styles.formGroupPassword}>
-                <Form.Label className={styles.textLabel}>
-                  Confirm Password
-                </Form.Label>
-                <Form.Control
-                  type="password"
-                  placeholder="Enter Confirm Password"
-                  className={styles.placeholderPassword}
-                />
-              </Form.Group>
-              <Col className={styles.rowButton}>
-                <Button
-                  className={styles.buttonLogin}
-                  variant="fff"
-                  type="submit"
-                >
-                  Login
-                </Button>
-              </Col>
-            </Col>
-          </Col>
+          <MenuChangePassword handleBack={handleBack.bind()} form={form} />
         )}
 
         {/* // ! BELUM DI INTEGRASI */}
@@ -838,10 +545,19 @@ function ArsTalk(props) {
           <Col lg={8} className={styles.right}>
             <Col className={styles.rightProfile}>
               <Col className={styles.rowHeaderInfoCard8} lg={11}>
-                <Image src={ImgProfile} className={styles.iconFriend} />
+                <Image
+                  src={`${process.env.REACT_APP_IMAGE_URL}${formChat.image}`}
+                  className={styles.iconFriend}
+                />
                 <Col className={styles.colRoom2}>
-                  <p className={styles.contactNameRight}>Name Receiver</p>
-                  <p className={styles.online}>Online</p>
+                  <p className={styles.contactNameRight}>
+                    {formChat.receiver_name}
+                  </p>
+                  <p className={styles.online}>
+                    {userOnline.includes(formChat.receiver_id)
+                      ? "Online"
+                      : "Offline"}
+                  </p>
                 </Col>
               </Col>
               <Col lg={1}>
@@ -942,10 +658,19 @@ function ArsTalk(props) {
           <Col lg={8} className={styles.right}>
             <Col className={styles.rightProfileAccount}>
               <Col className={styles.rowHeaderInfoCard8} lg={12}>
-                <Image src={ImgProfile} className={styles.iconFriend} />
+                <Image
+                  src={`${process.env.REACT_APP_IMAGE_URL}${formChat.image}`}
+                  className={styles.iconFriend}
+                />
                 <Col className={styles.colRoom2}>
-                  <p className={styles.contactNameRight}>Name Receiver</p>
-                  <p className={styles.online}>Online</p>
+                  <p className={styles.contactNameRight}>
+                    {formChat.receiver_name}
+                  </p>
+                  <p className={styles.online}>
+                    {userOnline.includes(formChat.receiver_id)
+                      ? "Online"
+                      : "Offline"}
+                  </p>
                 </Col>
               </Col>
             </Col>
@@ -988,23 +713,24 @@ function ArsTalk(props) {
                   </Col>
                   <Col className={styles.rowHeaderInfoCard4}>
                     <Image
-                      src={ImgProfile}
+                      src={`${process.env.REACT_APP_IMAGE_URL}${formChat.image}`}
                       className={styles.profileUserFriend}
                     />
                     <Row className={styles.rowInfoAccountFriend}>
                       <Col lg={10} className={styles.colNameAccout}>
-                        <p className={styles.friendsName}>Name Friend</p>
-                        <p className={styles.friendOnline}>Online</p>
+                        <p className={styles.friendsName}>
+                          {formChat.receiver_name}
+                        </p>
+                        <p className={styles.friendOnline}>
+                          {userOnline.includes(formChat.receiver_id)
+                            ? "Online"
+                            : "Offline"}
+                        </p>
                       </Col>
                       <Col lg={2} className={styles.colMenuAccout}>
                         <Image src={Menu} />
                       </Col>
                     </Row>
-                  </Col>
-                  <Col className={styles.rowHeaderInfoCard12}>
-                    <p className={styles.friendsPhone}>Phone Number</p>
-                    <p>+375(29)92390038</p>
-                    <hr className={styles.lineAccount} />
                   </Col>
                   <Col className={styles.rowHeaderInfoCard13}>
                     <Col className={styles.buttonGroupAccount}>

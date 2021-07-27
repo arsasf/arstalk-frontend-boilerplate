@@ -1,0 +1,166 @@
+@import url("https://fonts.googleapis.com/css2?family=Rubik&display=swap");
+
+.fullArea {
+  font-family: "Rubik", sans-serif;
+  background-color: aqua;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px white;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #7e98df;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #7e98df;
+}
+
+.left {
+  background-color: white;
+  overflow-y: scroll;
+  height: 655px;
+  padding: 1em;
+}
+
+.navMenu {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navMenu h3 {
+  color: #7e98df;
+  margin-bottom: 0;
+}
+
+.titleSort {
+  font-size: 20px;
+  font-weight: 900;
+  color: #7e98df;
+}
+
+.titleSort::after {
+  display: none;
+}
+
+.titleSort:hover,
+.titleSort:active,
+.titleSort:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.menuDropdown {
+  border: 3px solid #dedede;
+  border-top-left-radius: 35px;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 35px;
+  border-bottom-left-radius: 35px;
+  padding: 20px;
+  background-color: #7e98df;
+  height: auto;
+  width: 250px;
+}
+
+.listSort {
+  border-radius: 3px;
+  font-weight: lighter;
+  color: white;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  margin-bottom: 1em;
+}
+
+.listSort p {
+  margin-bottom: 0;
+  margin-left: 0.5em;
+}
+
+.listSort:hover,
+.listSort:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: #232323;
+  color: white;
+  border-radius: 10px;
+}
+
+.navSearch {
+  margin-top: 2em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.buttonSearch {
+  height: min-content;
+  border-bottom-left-radius: 15px;
+  border-top-left-radius: 15px;
+  margin-right: 0px;
+  background-color: transparent;
+}
+
+.formGroup {
+  background-color: #fafafa;
+  height: 52px;
+  width: 300px;
+  border-radius: 20px;
+}
+
+.buttonPlus {
+  width: max-content;
+  border-radius: 15px;
+}
+
+.buttonSearch:focus,
+.buttonSearch:active,
+.buttonSearch:hover {
+  height: 50px;
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: #232323;
+}
+
+.buttonPlus:focus,
+.buttonPlus:active,
+.buttonPlus:hover {
+  outline: none !important;
+  box-shadow: #7e98df;
+  background-color: #232323;
+}
+
+.placeholder::placeholder {
+  color: #848484;
+}
+.placeholder {
+  border: 0;
+  font-size: 15px;
+  font-weight: 500;
+  text-align: left;
+  height: 45px;
+  padding-left: 0;
+  padding-right: 10px;
+  margin-right: 20px;
+  margin-left: 10px;
+  background-color: transparent;
+}
+
+.placeholder:focus,
+.placeholder:hover,
+.placeholder:active,
+.placeholder option:focus,
+.placeholder option:active {
+  outline: none !important;
+  box-shadow: none !important;
+  border-bottom: 0;
+  background-color: transparent;
+}

@@ -142,9 +142,6 @@ function AllContact(props) {
   //* ======================== Integration ADD ROOM CHAT ============= */
   const HandleCreateChat = (friendId) => {
     const idUser = props.auth.data.user_id;
-    // console.log(true, "Proses Create Running");
-    // console.log("ini user id :", idUser);
-    // console.log("ini friend id :", friendId);
     const setData = {
       contactFriendId: friendId,
     };
@@ -164,10 +161,16 @@ function AllContact(props) {
       });
   };
 
-  const handleShowMessage = (params1, params2, param3, param4, param5) => {
+  const handleShowMessage = (
+    params1,
+    params2,
+    param3,
+    param4,
+    param5,
+    param6
+  ) => {
     props.showMessage(params1, params2);
-    props.setData(param3, param4, param5);
-    // props.getHistoryChatById(param3);
+    props.setData(param3, param4, param5, param6);
   };
   // console.log(props);
   //* =============================== End ============================ */
@@ -382,7 +385,8 @@ function AllContact(props) {
               false,
               props.dataRoomChat.room_chat,
               props.dataRoomChat.friend_id,
-              props.dataRoomChat.image
+              props.dataRoomChat.image,
+              props.dataRoomChat.user_fullname
             );
           }}
         >
