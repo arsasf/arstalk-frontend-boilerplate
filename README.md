@@ -1,13 +1,13 @@
 <h1 align='center'>Boilerplate - ArsTalk Chatting Real-time App</h1>
   <p align="center">
-    <a href="#">View Demo</a>
+    <a href="http://arstalk-frontend-boilerplate.vercel.app/">View Demo</a>
     ·
     <a href="https://github.com/arsasf/arstalk-frontend-boilerplate/issues">Report Bug</a>
     ·
     <a href="https://github.com/arsasf/arstalk-frontend-boilerplate/pulls">Request Feature</a>
   </p>
 
-![Image Banner](image_banner.png)
+![Image Banner](ArsTalk.png)
 
 ## About The Project
 
@@ -23,6 +23,8 @@ ArsTalk Chatting Real-Time is a website application to send messages in real-tim
 6. Verification Email
 7. Notification Message
 8. Online/Offline Status
+9. Show Typing
+10. Private Chat
 
 ## Built With
 

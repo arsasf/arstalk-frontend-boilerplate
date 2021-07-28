@@ -67,7 +67,8 @@
 .left {
   background-color: white;
   overflow-y: auto;
-  height: 655px;
+  /* height: 655px; */
+  height: 850px;
 }
 
 ::-webkit-scrollbar {
@@ -93,7 +94,8 @@
   overflow-y: auto;
   display: flex;
   flex-direction: row;
-  height: 655px;
+  /* height: 655px; */
+  height: 850px;
   padding-left: 0;
   padding-right: 0;
   position: relative;
