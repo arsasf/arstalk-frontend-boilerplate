@@ -17,7 +17,6 @@ import Google from "../../../assets/img/google.png";
 import Back from "../../../assets/img/back.png";
 
 function SignUp(props) {
-  console.log(props);
   const [form, setForm] = useState({
     userName: "",
     userEmail: "",
@@ -31,7 +30,6 @@ function SignUp(props) {
 
   const handleRegister = (event) => {
     event.preventDefault();
-    console.log(form);
     props
       .register(form)
       .then((result) => {
@@ -44,7 +42,6 @@ function SignUp(props) {
       .catch((err) => {
         setShow(true);
         setMsg(err.response.data.msg);
-        console.log(err);
         props.history.push("/register");
       });
   };
@@ -58,7 +55,6 @@ function SignUp(props) {
 
   return (
     <>
-      {console.log(msg)}
       <Container>
         <Card className={`${styles.card} mt-5 mb-5 mx-auto shadow `}>
           <Card.Body>

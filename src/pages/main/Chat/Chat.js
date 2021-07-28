@@ -12,7 +12,6 @@ function Chat(props) {
     new: "",
     old: "",
   });
-  // console.log(props);
   useEffect(() => {
     if (props.socket) {
       props.socket.on("chatMessage", (dataMessage) => {
@@ -22,16 +21,6 @@ function Chat(props) {
   }, [props.socket, messages]);
 
   const handleSelectRoom = (event) => {
-    // console.log(event.target.value);
-
-    // if (room.old) {
-    //   console.log("sudah pernah masuk ke room " + room.old);
-    //   console.log("dan akan masuk ke room " + event.target.value);
-    // } else {
-    //   console.log("belum pernah masuk ke ruang manapun");
-    //   console.log("dan akan masuk ke room " + event.target.value);
-    // }
-
     props.socket.emit("joinRoom", {
       room: event.target.value,
       oldRoom: room.old,
@@ -45,27 +34,12 @@ function Chat(props) {
   };
 
   const handleSendMessage = () => {
-    console.log("Username :", username);
-    console.log("Room :", room);
-    console.log("Send Message :", message);
-    // const setData = {
-    //   username,
-    //   message,
-    // };
-    // console.log(props);
-    // props.socket.emit("globalMessage", setData);
-    // props.socket.emit("privateMessage", setData);
-    // props.socket.emit("broadcastMessage", setData);
-    // ================================================
     const setData = {
       room: room.new,
       username,
       message,
     };
-    // [1] menjalankan socket io
     props.socket.emit("roomMessage", setData);
-    // [2] menjalankan proses axios post data ke table chat
-    // console.log(setMessage(setData));
 
     setMessage("");
   };

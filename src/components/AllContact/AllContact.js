@@ -126,16 +126,8 @@ function AllContact(props) {
     };
     props
       .addFriendContact(setData, id)
-      .then((result) => {
-        // setShow(true);
-        // setInfo("ADD FRIEND");
-        // setMsg(result.value.data.msg);
-      })
-      .catch((err) => {
-        // setShow(true);
-        // setInfo("ERROR : ADD FRIEND");
-        // setMsg(err.response.data.msg);
-      });
+      .then((result) => {})
+      .catch((err) => {});
   };
   //* =============================== End ============================ */
 
@@ -172,14 +164,9 @@ function AllContact(props) {
     props.showMessage(params1, params2);
     props.setData(param3, param4, param5, param6);
   };
-  // console.log(props);
   //* =============================== End ============================ */
 
-  //* ================== Integration Chat ============================ */
-
-  // };
-
-  //* =============================== End ============================ */
+  // console.log(props.messages[props.messages.length - 1].message);
 
   return (
     <>
@@ -390,11 +377,15 @@ function AllContact(props) {
               <h1 className={styles.nameReceiver}>
                 {props.dataRoomChat.user_fullname}
               </h1>
-              <h1 className={styles.time}>Time</h1>
             </Col>
             <Col className={styles.titleNameTime}>
-              <h1 className={styles.messageReceiver}>Message Receiver</h1>
-              <p className={styles.boxNotif}>5</p>
+              <h1 className={styles.messageReceiver}>
+                {props.messages.length > 0
+                  ? props.messages[0].room_chat === props.dataRoomChat.room_chat
+                    ? props.messages[props.messages.length - 1].message
+                    : "Message..."
+                  : "No Message..."}
+              </h1>
             </Col>
           </Col>
         </Button>
@@ -406,7 +397,7 @@ function AllContact(props) {
           </p>
         </Col>
       ) : (
-        console.log("")
+        ""
       )}
     </>
   );

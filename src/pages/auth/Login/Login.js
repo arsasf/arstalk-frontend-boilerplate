@@ -29,28 +29,24 @@ function Login(props) {
   const [isLogin, setIsLogin] = useState(true);
 
   useEffect(() => {
-    console.log("Login Run");
     setTimeout(() => {
       setIsLogin(false);
       props.history.push("/");
     }, 2000);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [props.history]);
 
   const handleClose = () => setShow(false);
 
   const handleLogin = (event) => {
-    console.log(true);
     event.preventDefault();
-    console.log(form);
     props
       .login(form)
       .then((result) => {
-        console.log(result);
         localStorage.setItem("token", result.value.data.data.token);
         props.getUserById(result.value.data.data.user_id);
         setShow(true);
         setMsg(result.value.data.msg);
+        console.log(result);
         setTimeout(() => {
           props.history.push(`/arstalk`);
         }, 3000);
@@ -59,7 +55,6 @@ function Login(props) {
         setShow(true);
         setMsg(err.response.data.msg);
         props.history.push("/");
-        console.log(err);
       });
   };
 

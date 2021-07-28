@@ -11,12 +11,10 @@ import PublicRoute from "./helpers/PublicRoute";
 import Login from "./pages/auth/Login/Login";
 import Register from "./pages/auth/SignUp/SignUp";
 import ForgotPassword from "./pages/auth/ForgotPassword/ForgotPassword";
-import Chat from "./pages/main/Chat/Chat";
 import Counter from "./pages/main/Counter/CounterFunctional";
 
 import io from "socket.io-client";
 import ArsTalk from "./pages/main/ArsTalk/ArsTalk";
-import ChatArs from "./pages/Chat/Chat";
 import Verify from "./pages/auth/Verify/Verify";
 
 function App() {
@@ -35,8 +33,6 @@ function App() {
   useEffect(() => {
     setupSocket();
   }, []);
-  // =======================================
-  // console.log(socket);
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
@@ -67,20 +63,7 @@ function App() {
               exact
               component={ArsTalk}
             />
-            <PrivateRoute socket={socket} path="/chat" exact component={Chat} />
-            <PrivateRoute
-              socket={socket}
-              path="/chat-arstalk"
-              exact
-              component={ChatArs}
-            />
-
-            <PublicRoute
-              // socket={socket}
-              path="/verify-register/:id"
-              exact
-              component={Verify}
-            />
+            <PublicRoute path="/verify-register/:id" exact component={Verify} />
             <PrivateRoute path="/counter" exact component={Counter} />
           </Switch>
         </Router>

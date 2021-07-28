@@ -2,7 +2,17 @@
 
 .container {
   font-family: "Rubik", sans-serif;
-  /* background-color: aqua; */
+}
+
+.notFound {
+  color: #7e98df;
+  font-weight: 600;
+  font-style: italic;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2em;
 }
 
 .boxToast {
@@ -47,7 +57,7 @@
   background-color: #232323;
   color: white;
   font-weight: 500;
-  padding: 0.5em;
+  padding: 1em;
   margin-left: 1em;
   border-bottom-left-radius: 15px;
   border-bottom-right-radius: 15px;
@@ -1139,14 +1149,11 @@
   font-style: italic;
 }
 
-/* .colright {
-  background-color: yellow;
-} */
-
 .colRightContact {
   margin-right: 15px;
   padding-left: 12px;
   position: relative;
+  height: 100%;
 }
 
 .rightProfileAccount {
@@ -1155,7 +1162,7 @@
   height: 80px;
   position: fixed;
   display: flex;
-  z-index: 0;
+  z-index: 4;
   flex-direction: row;
   margin-left: 0;
   margin-right: 0;
@@ -1166,7 +1173,7 @@
   background-color: white;
   padding-left: 0;
   margin-bottom: 0;
-  height: auto;
+  height: 100%;
 }
 
 .rowHeaderInfoCard10 {
@@ -1206,6 +1213,7 @@
   border-radius: 20px;
   display: flex;
   margin: auto;
+  background-color: brown;
 }
 
 .colNameAccout {
@@ -1365,7 +1373,10 @@
 
 @media (max-width: 1199.98px) {
   .rowHeaderInfoCard8 {
-    position: relative !important;
+    position: relative;
+    height: max-content;
+    margin-top: 0;
+    margin-bottom: 0;
   }
 
   .right {
@@ -1373,24 +1384,71 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+    height: max-content;
   }
 
   .rightProfile {
     position: relative;
     display: flex;
     width: 100%;
+    padding: 10px;
+    height: max-content;
   }
 
   .left {
-    position: relative !important;
+    position: relative;
+    height: max-content;
   }
 
   .rowHeaderInfoCard {
+    padding: 10px;
     width: 100%;
-    position: relative !important;
+    position: relative;
   }
 
-  .rowHeaderInfoCard9 {
+  .rowHeaderInfoCard9,
+  .rowHeaderInfoCard3 {
     width: 100%;
+  }
+  .rowHeaderInfoCard1 {
+    margin-top: 0;
+    padding: 10px;
+  }
+
+  .boxChatBubbleReceiver {
+    padding-left: 2em;
+  }
+
+  .buble {
+    padding-top: 0;
+  }
+
+  .rightProfileAccount {
+    width: 100%;
+    position: relative;
+    padding: 10px;
+  }
+
+  .colRightContact {
+    margin-right: 0;
+    background-color: white;
+  }
+
+  .friendsName {
+    text-align: center;
+  }
+
+  .friendOnline {
+    text-align: center;
+  }
+
+  .buttonGroupAccount {
+    width: 100%;
+    padding: 1em;
+  }
+
+  .boxButtonGroup {
+    width: 100%;
+    padding: 0;
   }
 }

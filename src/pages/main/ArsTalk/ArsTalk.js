@@ -43,7 +43,6 @@ import styles from "./ArsTalk.module.css";
 //* ============================ Import Image ====================== */
 import Contact from "../../../assets/img/contact.png";
 import Plus from "../../../assets/img/Plus.png";
-import ImgProfile from "../../../assets/img/img-profile.png";
 import Back from "../../../assets/img/back.png";
 import Menu from "../../../assets/img/menu.png";
 import Emoticon from "../../../assets/img/emoticon.png";
@@ -62,7 +61,6 @@ import MenuChat from "../../../components/Chat";
 import MenuChangePassword from "../../../components/ChangePassword";
 import MenuAddFriend from "../../../components/AddFriend";
 import MenuAccountSetting from "../../../components/AccountSetting";
-import ChatBubleComponent from "../../../components/ChatBuble/ChatBuble";
 //* =============================== End ============================ */
 
 function ArsTalk(props) {
@@ -129,6 +127,7 @@ function ArsTalk(props) {
   let [getDataContact] = useState([]);
   let [getRoomChat] = useState([]);
   let [getAllHistoryChat] = useState([]);
+  let [connect] = useState([]);
 
   useEffect(() => {
     getData();
@@ -138,7 +137,6 @@ function ArsTalk(props) {
     if (props.socket) {
       connect();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     getData,
     getDataContact,
@@ -146,15 +144,15 @@ function ArsTalk(props) {
     getAllHistoryChat,
     props.socket,
     message,
+    connect,
   ]);
-  const connect = () => {
+  connect = () => {
     const id = props.auth.data.user_id;
     props.socket.emit("connect-server", id);
     props.socket.on("list-user-online", (listUserOnline) => {
       setUserOnline(listUserOnline);
     });
     props.socket.on("chat-message", (dataMessage) => {
-      console.log();
       setMessages([...messages, dataMessage]);
     });
     props.socket.on("notif-message", (data) => {
@@ -226,7 +224,6 @@ function ArsTalk(props) {
   };
 
   const changeText = (event) => {
-    console.log(event);
     setForm({
       ...form,
       [event.target.name]: event.target.value,
@@ -282,27 +279,12 @@ function ArsTalk(props) {
 
   const handleLogout = () => {
     const id = props.auth.data.user_id;
-
-    props
-      .logout(id)
-      .then((result) => {
-        setShow(true);
-        setInfo("LOGOUT");
-        setMsg(result.value.data.msg);
-        props.socket.emit("disconnect-server", {
-          id,
-          room: connectedRooms.room,
-        });
-        setTimeout(() => {
-          props.history.push("/");
-          localStorage.clear();
-        }, 5000);
-      })
-      .catch((err) => {
-        setShow(true);
-        setMsg(err.response.data.msg);
-        props.history.push("/");
-      });
+    props.socket.emit("disconnect-server", {
+      id,
+      room: connectedRooms.room,
+    });
+    localStorage.clear();
+    props.history.push("/");
   };
 
   //* ========================= End Integration User ============== */
@@ -408,7 +390,6 @@ function ArsTalk(props) {
       receiver_name: param4,
     });
     setConnectedRooms({ ...connectedRooms, room: param1, oldRoom: param1 });
-    console.log(props);
 
     props
       .getHistoryChatById(param1)
@@ -458,7 +439,6 @@ function ArsTalk(props) {
 
   return (
     <Container fluid className={styles.container}>
-      {console.log(notif.show)}
       <div className={styles.boxToast}>
         <Toast
           onClose={() => setNotif({ ...notif, show: false })}
@@ -508,6 +488,7 @@ function ArsTalk(props) {
                     dataRoomChat={item}
                     showMessage={showMessage.bind()}
                     setData={setDataChat.bind()}
+                    messages={messages}
                   />
                 </Col>
               );
@@ -597,10 +578,7 @@ function ArsTalk(props) {
                     {userOnline.includes(formChat.receiver_id)
                       ? "Online"
                       : "Offline"}
-                    {typing.isTyping && (
-                      // <p>
-                      <em> writing a message...</em>
-                    )}
+                    {typing.isTyping && <em> writing a message...</em>}
                   </p>
                 </Col>
               </Col>
@@ -617,7 +595,7 @@ function ArsTalk(props) {
             <Col className={styles.colright}>
               <Row className={styles.buble}>
                 <Col className={styles.colRightLeft}>
-                  {messages.length > 0 &&
+                  {messages.length > 0 ? (
                     messages.map((item, index) => (
                       <div
                         className={
@@ -643,7 +621,10 @@ function ArsTalk(props) {
                           {item.message}
                         </h6>
                       </div>
-                    ))}
+                    ))
+                  ) : (
+                    <h6 className={styles.notFound}>History Chat Not found</h6>
+                  )}
                 </Col>
               </Row>
             </Col>
@@ -728,10 +709,10 @@ function ArsTalk(props) {
                 </Col>
               </Col>
             </Col>
-            <Col className={styles.colright} lg={8}>
+            <Col className={styles.colright} lg={8} md={12} xs={12} sm={12}>
               <Row className={styles.buble}>
                 <Col className={styles.colRightLeft}>
-                  {messages.length > 0 &&
+                  {messages.length > 0 ? (
                     messages.map((item, index) => (
                       <div
                         className={
@@ -757,7 +738,10 @@ function ArsTalk(props) {
                           {item.message}
                         </h6>
                       </div>
-                    ))}
+                    ))
+                  ) : (
+                    <h6 className={styles.notFound}>History Chat Not found</h6>
+                  )}
                 </Col>
               </Row>
             </Col>
@@ -778,7 +762,13 @@ function ArsTalk(props) {
                       className={styles.profileUserFriend}
                     />
                     <Row className={styles.rowInfoAccountFriend}>
-                      <Col lg={10} className={styles.colNameAccout}>
+                      <Col
+                        lg={10}
+                        md={12}
+                        xs={12}
+                        sm={12}
+                        className={styles.colNameAccout}
+                      >
                         <p className={styles.friendsName}>
                           {formChat.receiver_name}
                         </p>
@@ -788,7 +778,13 @@ function ArsTalk(props) {
                             : "Offline"}
                         </p>
                       </Col>
-                      <Col lg={2} className={styles.colMenuAccout}>
+                      <Col
+                        lg={2}
+                        md={12}
+                        xs={12}
+                        sm={12}
+                        className={styles.colMenuAccout}
+                      >
                         <Image src={Menu} />
                       </Col>
                     </Row>
@@ -840,13 +836,18 @@ function ArsTalk(props) {
                 </Col>
               </Row>
             </Col>
-            <Col className={styles.rowHeaderInfoCard10} lg={8}>
+            <Col className={styles.rowHeaderInfoCard9}>
               <Form.Group className={styles.formGroupRight}>
                 <InputGroup className={styles.inputGroupRight}>
                   <Form.Control
                     type="text"
                     placeholder="Type Your Message..."
                     className={styles.placeholderRight}
+                    value={message}
+                    onChange={(event) => {
+                      changeMessage(event);
+                      handleStopTyping();
+                    }}
                   />
                   <p className={styles.colAttachment}>
                     <Dropdown className={styles.dropdownSort}>
@@ -885,6 +886,13 @@ function ArsTalk(props) {
                   </p>
                 </InputGroup>
               </Form.Group>
+              <Button
+                variant="dark"
+                type="submit"
+                onClick={() => handleAddMessage(message)}
+              >
+                Send
+              </Button>
             </Col>
           </Col>
         )}

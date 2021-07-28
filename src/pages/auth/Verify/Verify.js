@@ -17,7 +17,6 @@ function Verify(props) {
     props
       .verify(id)
       .then((result) => {
-        console.log(result);
         setShow(true);
         setLogin(true);
         setMsg(result.value.data.msg);
@@ -25,7 +24,6 @@ function Verify(props) {
       .catch((err) => {
         setShow(true);
         setMsg(err.response.data.msg);
-        console.log(err);
         props.history.push(`/verify-register/${id}`);
       });
   };

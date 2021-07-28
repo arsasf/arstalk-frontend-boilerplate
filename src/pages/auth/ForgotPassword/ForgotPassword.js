@@ -29,11 +29,7 @@ function ForgotPassword(props) {
   return (
     <>
       <Container>
-        <Card
-          // className="mt-5 mx-auto"
-          // style={{ width: "25rem" }}
-          className={`${styles.card} mt-5 mb-5 mx-auto shadow `}
-        >
+        <Card className={`${styles.card} mt-5 mb-5 mx-auto shadow `}>
           <Card.Body>
             <Col className={styles.rowHeader}>
               <Link to="/login" className={styles.iconBack}>
@@ -41,8 +37,6 @@ function ForgotPassword(props) {
               </Link>
               <h1 className={styles.register}>Forgot Password</h1>
             </Col>
-
-            {/* <hr /> */}
             <p className={styles.letsCreateAccount}>
               You’ll get messages soon on your e-mail
             </p>

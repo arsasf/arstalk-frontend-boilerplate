@@ -23,9 +23,6 @@ function ChatBuble(props) {
             ) : (
               <p className={styles.bubleMessageReceiver}>
                 {props.dataChatHistoryId.message}
-                {/* <p className={styles.timeBubleReceiver}>
-                  {props.dataChatHistoryId.chat_created_at}
-                </p> */}
               </p>
             )}
           </p>
@@ -45,8 +42,6 @@ function ChatBuble(props) {
               <p className={styles.timeBubleSender}>08:05</p>
             </p>
           </p>
-
-          // console.log(false)
         )
       ) : props.dataChatHistoryId.sender_id ===
           props.dataChatHistoryId.user_id ||
@@ -65,9 +60,6 @@ function ChatBuble(props) {
           ) : (
             <p className={styles.bubleMessageReceiver}>
               {props.dataChatHistoryId.message}
-              {/* <p className={styles.timeBubleReceiver}>
-                  {props.dataChatHistoryId.chat_created_at}
-                </p> */}
             </p>
           )}
         </p>
@@ -87,8 +79,6 @@ function ChatBuble(props) {
             <p className={styles.timeBubleSender}>08:05</p>
           </p>
         </p>
-
-        // console.log(false)
       )}
     </>
   );
